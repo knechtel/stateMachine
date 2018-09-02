@@ -35,9 +35,7 @@ module machineCPU(estadoCPU,rst,clk,dados,ack,send);
                    dados= 3'b111;
 		   send=1;
 		   NS=3'b001;
-             	    
-        
-		   $display("send d%",send);
+             	   $display("send d%",send);
                  end     
                 3'b001:begin//estado 01
               	   if(ack==1)   
@@ -48,9 +46,7 @@ module machineCPU(estadoCPU,rst,clk,dados,ack,send);
                 end   
                 3'b010:begin//estado 10
 		   send=0;
-		   
-              	 	
-                   NS=3'b011;
+		   NS=3'b011;
                 end 
                 3'b011:begin//estado 11
               	   if(ack==0)
@@ -159,8 +155,7 @@ module periferico(estadoPeriferico,rst2,clk2,dados2,send2,ack1,dadosPeriferico);
                 3'b011:begin//estado 11
 		   ack1=0;
 		   sendPeriferico = 1;
-		   
-                   NS = 3'b00; 
+	           NS = 3'b00; 
                 end   
 		endcase
 	     end
