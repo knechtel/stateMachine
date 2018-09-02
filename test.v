@@ -6,24 +6,16 @@ module testaCpu;
   reg clk2;
   reg rst;
   reg rst2;
-  
-   wire [3:0] dados;
    
-
-   
-   
+  wire [3:0] dados;
   wire dados2;
-  wire send2;
   wire ack;
-  wire ack2;
-  wire sendPeriferico;
-  wire ackPeriferico;
    
    
   wire [3:0] dadosPeriferico;
   // Outputs
   wire [1:0] estadoPeriferico;
-  wire [1:0] LB;
+
   // Outputs
   wire [1:0] estadoCPU;
   wire send;
@@ -61,14 +53,9 @@ module testaCpu;
     rst2 = 0;
     clk  = 0;
     clk2 = 0;
-    
-     #20
-     rst2=1;
-     rst=1;
-     
-     
-     
-  
+    #20
+    rst2=1;
+    rst=1;
   
   end
 
