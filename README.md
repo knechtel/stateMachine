@@ -15,6 +15,8 @@ Os campos marcados são send da CPU,  clock da CPU, ack do periferico e clock do
 
 
 
+CPU clock mais rápido que o periférico:
+
 <img src='https://4.bp.blogspot.com/-9YXyvzgo0m0/W4wrX4z2AcI/AAAAAAAAD08/mbTgJGDrceIuYFmRCwlRSrxkt4MGLEMBACLcBGAs/s1600/Screen%2BShot%2B2018-09-02%2Bat%2B15.22.55.jpg'/>
 
 
