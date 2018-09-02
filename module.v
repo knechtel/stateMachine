@@ -59,7 +59,7 @@ module machineCPU(estadoCPU,rst,clk,dados,ack,send);
 		      NS=3'b011;
                 end
 		3'b100:begin//estado 01
-		    dados= dados+1;
+		   dados= dados+1;
 		   send=1;
 		   NS=3'b001;
                 end 
