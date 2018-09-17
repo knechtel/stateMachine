@@ -14,10 +14,10 @@ module testaCpu;
    
   wire [3:0] dadosPeriferico;
   // Outputs
-  wire [1:0] estadoPeriferico;
+  wire [3:0] estadoPeriferico;
 
   // Outputs
-  wire [1:0] estadoCPU;
+  wire [3:0] estadoCPU;
   wire send;
   
    // Instantiate the Unit Under Test (UUT)
@@ -48,19 +48,23 @@ module testaCpu;
   initial begin
     $dumpfile("dump.vcd");
     $dumpvars(1);
+     clk  = 0;
+     clk2 = 0;
+   
+     rst=1;
+     rst2=1;
+   
+     #20 
+     rst=0;
+     rst2 =0;
+   
+  
      
-    rst=0;
-    rst2 = 0;
-    clk  = 0;
-    clk2 = 0;
-    #20
-    rst2=1;
-    rst=1;
   
   end
 
     
  
    always  #5  clk =  ! clk;
-   always  #10  clk2 =  ! clk2;
+   always  #8  clk2 =  ! clk2;
 endmodule

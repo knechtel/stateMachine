@@ -2,7 +2,7 @@
 
 
 module machineCPU(estadoCPU,rst,clk,dados,ack,send);
-  output reg [1:0] estadoCPU;
+   output reg [3:0] estadoCPU;
   
   
   input rst;
@@ -11,8 +11,7 @@ module machineCPU(estadoCPU,rst,clk,dados,ack,send);
   reg [3:0]dados;
   input ack;
   output reg send;
-  output reg ackPeriferico;
-  input sendPeriferico;
+
 
   reg [3:0] S;//state
   reg [3:0] NS;//next state
@@ -20,8 +19,8 @@ module machineCPU(estadoCPU,rst,clk,dados,ack,send);
 	/***** STATE *****/
 	always @ (posedge clk)
 	begin
-          if(rst == 0)
-	    S <= 2'b00;
+          if(rst == 1)
+	    S <= 3'b000;
           else
 	    S <= NS;
         end
@@ -32,33 +31,37 @@ module machineCPU(estadoCPU,rst,clk,dados,ack,send);
 		begin
 		case ({S})
 		3'b000:begin//estado 00
-                   dados= 3'b111;
-		   send=1;
-		   NS=3'b001;
-             	   $display("send d%",send);
+                  
+		  dados=3'b001;  
+		 
+             	  NS=3'b001;
                  end     
                 3'b001:begin//estado 01
-              	   if(ack==1)   
+		 
+	
+		   
+              	   if(ack==0)   
 		     NS=3'b001;
                    else
 		     NS=3'b010;
+
+		
 		   
                 end   
                 3'b010:begin//estado 10
-		   send=0;
-		   NS=3'b011;
+		   if(ack==1)
+		     NS=3'b010;
+		   else
+		     NS=3'b011;
+		   //NS=3'b011;
                 end 
                 3'b011:begin//estado 11
-              	   if(ack==0)
-		      NS=3'b100;
-		   else
-		      NS=3'b011;
+              	   NS=3'b001;
                 end
 		3'b100:begin//estado 01
-		   dados= dados+1;
-		   send=1;
+	
 		   NS=3'b001;
-                end 
+	        end 
 			endcase
 		end
 	/***** NEXT STATE *****/
@@ -89,24 +92,51 @@ module machineCPU(estadoCPU,rst,clk,dados,ack,send);
 			endcase
 		end
 	/***** OUTPUTS *****/
+
+
+	always @ (*)
+		begin
+			case ({S})
+				3'b000:begin
+			          send=0;
+		         
+				
+				end
+				3'b001:begin
+				   send=1;
+				      dados=dados+1;
+			        end
+				3'b010:begin
+				   send =0;
+			        end
+				3'b011:begin
+				   send = 0;
+				   
+				       
+				end
+			        3'b100:begin
+				   send =0;
+				end
+			endcase
+		end
+
  
   
 endmodule
 
 module periferico(estadoPeriferico,rst2,clk2,dados2,send2,ack1,dadosPeriferico);
 
-  output reg [1:0] estadoPeriferico;//ouput do estado
+  output reg [3:0] estadoPeriferico;//ouput do estado
   input rst2;
   input clk2;
   input [3:0]dados2;
   output
   reg [3:0]dadosPeriferico;
-  output ack2;
-  reg ack2;
-  output send2;
+ 
+  input send2;
    
   output ackPeriferico;
-  output reg sendPeriferico;
+ 
   output reg ack1;
    
   reg [3:0] S;//state
@@ -115,10 +145,12 @@ module periferico(estadoPeriferico,rst2,clk2,dados2,send2,ack1,dadosPeriferico);
   /***** STATE *****/
   always @ (posedge clk2)
 		begin
-		   if(rst2 ==0)
-		      S <= 2'b00;
+		   if(rst2 ==1)
+		     S <= 3'b000;
           	   else
-		      S <= NS;
+		     S <= NS;
+		     
+ 
 		    
 		end
   /***** STATE *****/
@@ -139,23 +171,25 @@ module periferico(estadoPeriferico,rst2,clk2,dados2,send2,ack1,dadosPeriferico);
                 end     
                 3'b001:begin//estado 01
 		   $display("dados ok! ");
-		   dadosPeriferico=dados2+1;
-		   ack1=1;
-		   sendPeriferico=1;
-		   NS = 3'b010;
+		  
+		   
+		  
+		   if(send2==1)
+		     NS = 3'b010;
+		   else
+		     NS = 3'b010;
+
+		    dadosPeriferico=dados2;
                 end
 		        
                 3'b010:begin//estado 10
 		   $display("dados ok! ");
-		   if(send2==1)
-		     NS = 3'b011;
-		   else
-		     NS = 3'b010;
+		  
+		     NS = 3'b000;
                 end   
-                3'b011:begin//estado 11
-		   ack1=0;
-		   sendPeriferico = 1;
-	           NS = 3'b00; 
+-                3'b011:begin//estado 11
+		   
+		   NS = 3'b000; 
                 end   
 		endcase
 	     end
@@ -165,24 +199,48 @@ module periferico(estadoPeriferico,rst2,clk2,dados2,send2,ack1,dadosPeriferico);
 		begin
 			case ({S})
 				3'b000:begin
-					estadoPeriferico = 2'b00;
+					estadoPeriferico = 3'b00;
 				       
 				end
 				3'b001:begin
-					estadoPeriferico = 2'b01;
+					estadoPeriferico = 3'b01;
 					
 				end
 				3'b010:begin
-					estadoPeriferico = 2'b10;
+					estadoPeriferico = 3'b10;
 				       
 				end
 				3'b011:begin
-					estadoPeriferico = 2'b11;
+					estadoPeriferico = 3'b11;
 					
 				end
 			endcase
 		end
 	/***** OUTPUTS *****/
+
+        	always @ (*)
+		begin
+			case ({S})
+				3'b000:begin
+				   ack1=0;
+				   
+				       
+				end
+				3'b001:begin
+				   ack1=1;
+				end
+				3'b010:begin
+				   ack1=0;
+				end
+				3'b011:begin
+				   ack1=0;
+		                
+	
+				end
+			endcase
+		end
+	/***** OUTPUTS *****/
+
  
 
 endmodule
